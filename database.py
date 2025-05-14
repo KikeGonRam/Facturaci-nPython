@@ -1,18 +1,24 @@
-import sqlite3
-from sqlite3 import Error
+import mysql.connector
+from mysql.connector import Error
 
 def create_connection():
-    """Crea una conexión a la base de datos SQLite."""
+    """Crea una conexión a la base de datos MySQL."""
     conn = None
     try:
-        conn = sqlite3.connect("facturacion.db")
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",  # Reemplaza con tu usuario de MySQL
+            password="",  # Reemplaza con tu contraseña de MySQL
+            database="facturacion;",
+            port=3306
+        )
         return conn
     except Error as e:
         print(f"Error al conectar a la base de datos: {e}")
     return conn
 
 def create_tables():
-    """Crea las tablas necesarias en la base de datos."""
+    """Crea las tablas necesarias en la base de datos MySQL."""
     conn = create_connection()
     if conn is not None:
         try:
@@ -20,37 +26,37 @@ def create_tables():
             # Tabla de clientes
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS clientes (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre TEXT NOT NULL,
-                    documento TEXT NOT NULL UNIQUE
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nombre VARCHAR(255) NOT NULL,
+                    documento VARCHAR(50) NOT NULL UNIQUE
                 )
             """)
             # Tabla de productos
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS productos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre TEXT NOT NULL,
-                    precio REAL NOT NULL
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nombre VARCHAR(255) NOT NULL,
+                    precio DECIMAL(10,2) NOT NULL
                 )
             """)
             # Tabla de facturas
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS facturas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    cliente_id INTEGER NOT NULL,
-                    fecha TEXT NOT NULL,
-                    FOREIGN KEY (cliente_id) REFERENCES clientes (id)
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    cliente_id INT NOT NULL,
+                    fecha DATE NOT NULL,
+                    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
                 )
             """)
             # Tabla de ítems de factura
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS factura_items (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    factura_id INTEGER NOT NULL,
-                    producto_id INTEGER NOT NULL,
-                    cantidad INTEGER NOT NULL,
-                    FOREIGN KEY (factura_id) REFERENCES facturas (id),
-                    FOREIGN KEY (producto_id) REFERENCES productos (id)
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    factura_id INT NOT NULL,
+                    producto_id INT NOT NULL,
+                    cantidad INT NOT NULL,
+                    FOREIGN KEY (factura_id) REFERENCES facturas(id),
+                    FOREIGN KEY (producto_id) REFERENCES productos(id)
                 )
             """)
             conn.commit()
@@ -64,7 +70,7 @@ def add_cliente(nombre, documento):
     conn = create_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO clientes (nombre, documento) VALUES (?, ?)", (nombre, documento))
+        cursor.execute("INSERT INTO clientes (nombre, documento) VALUES (%s, %s)", (nombre, documento))
         conn.commit()
         return cursor.lastrowid
     except Error as e:
@@ -78,7 +84,7 @@ def add_producto(nombre, precio):
     conn = create_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO productos (nombre, precio) VALUES (?, ?)", (nombre, precio))
+        cursor.execute("INSERT INTO productos (nombre, precio) VALUES (%s, %s)", (nombre, precio))
         conn.commit()
         return cursor.lastrowid
     except Error as e:
@@ -92,7 +98,7 @@ def add_factura(cliente_id, fecha):
     conn = create_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO facturas (cliente_id, fecha) VALUES (?, ?)", (cliente_id, fecha))
+        cursor.execute("INSERT INTO facturas (cliente_id, fecha) VALUES (%s, %s)", (cliente_id, fecha))
         conn.commit()
         return cursor.lastrowid
     except Error as e:
@@ -106,7 +112,7 @@ def add_factura_item(factura_id, producto_id, cantidad):
     conn = create_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO factura_items (factura_id, producto_id, cantidad) VALUES (?, ?, ?)", 
+        cursor.execute("INSERT INTO factura_items (factura_id, producto_id, cantidad) VALUES (%s, %s, %s)", 
                        (factura_id, producto_id, cantidad))
         conn.commit()
         return cursor.lastrowid
@@ -168,7 +174,7 @@ def get_factura_detalles(factura_id):
             SELECT p.nombre, p.precio, fi.cantidad 
             FROM factura_items fi 
             JOIN productos p ON fi.producto_id = p.id 
-            WHERE fi.factura_id = ?
+            WHERE fi.factura_id = %s
         """, (factura_id,))
         return cursor.fetchall()
     except Error as e:
