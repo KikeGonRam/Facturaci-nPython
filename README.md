@@ -1,58 +1,53 @@
 # Sistema de Facturación en Python
 
-Aplicación de escritorio para **gestionar clientes, productos y facturas**, con interfaz gráfica en **Tkinter** y almacenamiento en **MySQL**. Las facturas se exportan a archivos de texto.
+Aplicación de escritorio para **gestionar clientes, productos y facturas**, con interfaz gráfica en **Tkinter** y almacenamiento en **MySQL**. Cada factura se exporta a un archivo de texto.
 
+[![Seguridad](https://github.com/KikeGonRam/Facturaci-nPython/actions/workflows/security.yml/badge.svg)](https://github.com/KikeGonRam/Facturaci-nPython/actions/workflows/security.yml)
 ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
-![Tkinter](https://img.shields.io/badge/GUI-Tkinter-4B8BBE)
 ![MySQL](https://img.shields.io/badge/MySQL-Server-4479A1?logo=mysql&logoColor=white)
+
+[Seguridad](SECURITY.md)
 
 ## Funcionalidades
 
-- Interfaz gráfica con pestañas para **clientes**, **productos** y **facturas**.
-- Alta, listado y selección de clientes y productos.
-- Creación de facturas con múltiples ítems y cálculo del total.
-- Exportación de cada factura a un archivo `factura_<id>.txt`.
-- Persistencia de los datos en MySQL.
+| Módulo | Qué hace |
+| --- | --- |
+| Clientes | Alta, listado y selección. |
+| Productos | Alta, listado y selección. |
+| Facturas | Creación con múltiples ítems, cálculo del total y exportación a `factura_<id>.txt`. |
+| Datos | Persistencia en MySQL. |
 
 ## Estructura
 
 ```
 Facturacion-Python/
-├── main.py        # Punto de entrada: inicia la interfaz gráfica
-├── gui.py         # Interfaz con Tkinter (pestañas de clientes, productos y facturas)
-├── database.py    # Conexión y consultas a MySQL
-├── models.py      # Clases de cliente, producto y factura
-└── utils.py       # Formateo de tablas (tabulate) y guardado de facturas a .txt
+├── main.py       # Punto de entrada: inicia la interfaz gráfica
+├── gui.py        # Interfaz con Tkinter (pestañas de clientes, productos y facturas)
+├── database.py   # Conexión y consultas a MySQL
+├── models.py     # Clases de cliente, producto y factura
+└── utils.py      # Formateo de tablas (tabulate) y guardado a .txt
 ```
 
 ## Requisitos
 
 - Python 3.x
 - MySQL Server
-- Paquetes de Python: `mysql-connector-python`, `tabulate`, `python-dateutil`
+- Paquetes: `mysql-connector-python`, `tabulate`, `python-dateutil`
 
 ## Instalación
 
 ```bash
 git clone https://github.com/KikeGonRam/Facturaci-nPython.git
 cd Facturaci-nPython
-
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# macOS / Linux:
-source venv/bin/activate
-
+python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install mysql-connector-python tabulate python-dateutil
 ```
 
-Crea la base de datos en MySQL:
+Crea la base de datos y ajusta las credenciales de conexión en `database.py`:
 
 ```sql
 CREATE DATABASE facturacion;
 ```
-
-Y ajusta tus credenciales de conexión (host, usuario y contraseña) en `database.py`.
 
 ## Uso
 
@@ -61,6 +56,12 @@ Con el servidor MySQL en ejecución:
 ```bash
 python main.py
 ```
+
+## Seguridad
+
+El análisis estático (Semgrep) y el escaneo de secretos (Gitleaks) corren en cada *push*
+y PR (ver [workflow](.github/workflows/security.yml)). Las credenciales de la base de
+datos no deben versionarse. Reporta vulnerabilidades según [SECURITY.md](SECURITY.md).
 
 ## Tecnologías
 
