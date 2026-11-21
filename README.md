@@ -1,51 +1,71 @@
-Sistema de Facturación en Python con Interfaz Gráfica y MySQL
-Este es un sistema de facturación mejorado desarrollado en Python con una interfaz gráfica usando tkinter y una base de datos MySQL. Permite gestionar clientes, productos y facturas, almacenando la información en MySQL y generando facturas en archivos de texto.
-Requisitos
+# Sistema de Facturación en Python
 
-Python 3.x
-MySQL Server
-Módulos: mysql-connector-python, tabulate, python-dateutil
+Aplicación de escritorio para **gestionar clientes, productos y facturas**, con interfaz gráfica en **Tkinter** y almacenamiento en **MySQL**. Las facturas se exportan a archivos de texto.
 
-Instalación
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![Tkinter](https://img.shields.io/badge/GUI-Tkinter-4B8BBE)
+![MySQL](https://img.shields.io/badge/MySQL-Server-4479A1?logo=mysql&logoColor=white)
 
-Clona o descarga el proyecto.
-Configura una base de datos MySQL:CREATE DATABASE facturacion;
+## Funcionalidades
 
+- Interfaz gráfica con pestañas para **clientes**, **productos** y **facturas**.
+- Alta, listado y selección de clientes y productos.
+- Creación de facturas con múltiples ítems y cálculo del total.
+- Exportación de cada factura a un archivo `factura_<id>.txt`.
+- Persistencia de los datos en MySQL.
 
-Crea un entorno virtual:python -m venv venv
+## Estructura
 
+```
+Facturacion-Python/
+├── main.py        # Punto de entrada: inicia la interfaz gráfica
+├── gui.py         # Interfaz con Tkinter (pestañas de clientes, productos y facturas)
+├── database.py    # Conexión y consultas a MySQL
+├── models.py      # Clases de cliente, producto y factura
+└── utils.py       # Formateo de tablas (tabulate) y guardado de facturas a .txt
+```
 
-Activa el entorno virtual:
-Windows: venv\Scripts\activate
-macOS/Linux: source venv/bin/activate
+## Requisitos
 
+- Python 3.x
+- MySQL Server
+- Paquetes de Python: `mysql-connector-python`, `tabulate`, `python-dateutil`
 
-Instala las dependencias:pip install mysql-connector-python tabulate python-dateutil
+## Instalación
 
+```bash
+git clone https://github.com/KikeGonRam/Facturaci-nPython.git
+cd Facturaci-nPython
 
-Actualiza las credenciales de MySQL en database.py (host, user, password).
-Ejecuta el programa:python main.py
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS / Linux:
+source venv/bin/activate
 
+pip install mysql-connector-python tabulate python-dateutil
+```
 
+Crea la base de datos en MySQL:
 
-Funcionalidades
+```sql
+CREATE DATABASE facturacion;
+```
 
-Interfaz gráfica con pestañas para gestionar clientes, productos y facturas.
-Agregar, listar y seleccionar clientes y productos.
-Crear facturas con múltiples ítems.
-Guardar facturas en archivos de texto.
-Almacenamiento de datos en MySQL.
+Y ajusta tus credenciales de conexión (host, usuario y contraseña) en `database.py`.
 
-Estructura del Proyecto
+## Uso
 
-main.py: Inicia la aplicación gráfica.
-database.py: Manejo de la base de datos MySQL.
-models.py: Clases para clientes, productos y facturas.
-utils.py: Funciones auxiliares para formateo y guardado.
-gui.py: Implementación de la interfaz gráfica con tkinter.
+Con el servidor MySQL en ejecución:
 
-Notas
+```bash
+python main.py
+```
 
-Asegúrate de que el servidor MySQL esté en ejecución antes de iniciar la aplicación.
-Las facturas se guardan como archivos de texto en la carpeta del proyecto.
+## Tecnologías
 
+Python · Tkinter · MySQL · tabulate
+
+---
+
+Proyecto de Luis Enrique González Ramírez — [github.com/KikeGonRam](https://github.com/KikeGonRam)
